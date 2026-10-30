@@ -1,0 +1,2 @@
+# Optional: ONNX sentence embeddings (BAAI/bge-small-en-v1.5). Without it the app uses LSA embeddings.
+fastembed>=0.4

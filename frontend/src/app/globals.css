@@ -1,0 +1,249 @@
+@import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
+
+/* ---- Tokens ------------------------------------------------------------
+   Cool clinical paper, pine ink, and three highlighter markers that carry
+   meaning everywhere: ok = you meet it, check = needs checking, no = conflict. */
+:root {
+  --paper: #f4f7f6;
+  --paper-2: #e8eeec;
+  --surface: #ffffff;
+  --ink: #112b2a;
+  --ink-2: #48605d;
+  --ink-3: #6f8481;
+  --pine: #1e5a52;
+  --pine-hover: #174a43;
+  --on-pine: #ffffff;
+  --rule: #d3ddda;
+  --mark-ok: #bfe5c6;
+  --mark-check: #f5e07a;
+  --mark-no: #f5bdb4;
+  --mark-info: #d5e3f2;
+  --focus: #2f7fd0;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0f1a1a;
+    --paper-2: #152322;
+    --surface: #182827;
+    --ink: #e4ecea;
+    --ink-2: #a9bbb8;
+    --ink-3: #85a09c;
+    --pine: #79c7b8;
+    --pine-hover: #94d6c9;
+    --on-pine: #0f1a1a;
+    --rule: #2a3d3b;
+    --mark-ok: #2e5b3c;
+    --mark-check: #6b5b15;
+    --mark-no: #6d302a;
+    --mark-info: #26405a;
+    --focus: #7db8f0;
+    color-scheme: dark;
+  }
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-paper-2: var(--paper-2);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-pine: var(--pine);
+  --color-pine-hover: var(--pine-hover);
+  --color-on-pine: var(--on-pine);
+  --color-rule: var(--rule);
+  --color-mark-ok: var(--mark-ok);
+  --color-mark-check: var(--mark-check);
+  --color-mark-no: var(--mark-no);
+  --color-mark-info: var(--mark-info);
+  --font-sans: var(--font-public-sans);
+  --font-serif: var(--font-source-serif);
+
+  /* modular scale, ratio 1.25 on a 17px body */
+  --text-xs: 0.8125rem;
+  --text-sm: 0.9375rem;
+  --text-base: 1.0625rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.5625rem;
+  --text-2xl: 1.953rem;
+  --text-3xl: 2.441rem;
+  --text-4xl: 3.052rem;
+  --text-5xl: 3.815rem;
+}
+
+html {
+  background: var(--paper);
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-public-sans), system-ui, sans-serif;
+  font-size: var(--text-base);
+  line-height: 1.55;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+::selection {
+  background: var(--mark-check);
+  color: var(--ink);
+}
+
+/* Text quoted from a trial document */
+.doc {
+  font-family: var(--font-source-serif), Georgia, serif;
+  line-height: 1.7;
+}
+
+/* Highlighter marks: a slightly uneven stroke behind the text, like a real marker */
+.mark {
+  --mark: var(--mark-check);
+  background-image: linear-gradient(
+    100deg,
+    transparent 0.2em,
+    var(--mark) 0.35em,
+    var(--mark) calc(100% - 0.35em),
+    transparent calc(100% - 0.15em)
+  );
+  background-size: 100% 78%;
+  background-position: 0 70%;
+  background-repeat: no-repeat;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  padding: 0 0.3em;
+  margin: 0 -0.1em;
+}
+.mark-ok { --mark: var(--mark-ok); }
+.mark-check { --mark: var(--mark-check); }
+.mark-no { --mark: var(--mark-no); }
+.mark-info { --mark: var(--mark-info); }
+
+/* Hero: the marker sweeps across once on load */
+@keyframes sweep {
+  from { background-size: 0% 78%; }
+  to { background-size: 100% 78%; }
+}
+.mark-sweep {
+  animation: sweep 0.55s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+@keyframes rise {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: none; }
+}
+.rise {
+  animation: rise 0.4s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mark-sweep, .rise { animation: none; }
+}
+
+input[type="range"] {
+  accent-color: var(--pine);
+}
+
+/* Leaflet integration */
+.leaflet-container {
+  font-family: var(--font-public-sans), system-ui, sans-serif;
+  background: var(--paper-2);
+}
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  background: var(--surface);
+  color: var(--ink);
+  border-radius: 8px;
+  box-shadow: 0 4px 18px rgb(17 43 42 / 0.16);
+}
+.leaflet-popup-content {
+  margin: 12px 14px;
+  font-size: 14px;
+  line-height: 1.45;
+}
+.leaflet-control-attribution {
+  font-size: 10px;
+}
+.leaflet-tile-pane {
+  filter: grayscale(0.85) contrast(0.92) brightness(1.04);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .leaflet-tile-pane {
+    filter: grayscale(0.9) invert(1) hue-rotate(180deg) brightness(0.85) contrast(0.9);
+  }
+}
+.pin {
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  background: var(--pine);
+  border: 2px solid var(--surface);
+  box-shadow: 0 1px 4px rgb(0 0 0 / 0.3);
+  transition: transform 0.15s ease;
+}
+.pin-active {
+  transform: scale(1.6);
+  background: var(--ink);
+}
+.pin-home {
+  width: 18px;
+  height: 18px;
+  background: var(--surface);
+  border: 4px solid var(--ink);
+}
+
+/* ---- Chart tokens (validated with the dataviz palette checker) ----------
+   two-series: amber = rule-based reader, teal = AI reader / our model */
+:root {
+  --viz-a: #c98a2e;
+  --viz-b: #21907c;
+  --viz-muted: #b9c6c3;
+  --viz-grid: #e3e9e7;
+  --viz-flag: #d03b3b;
+  --seq-1: #e2f0eb;
+  --seq-2: #b9dccf;
+  --seq-3: #86c0ab;
+  --seq-4: #4f9c86;
+  --seq-5: #2b7764;
+  --seq-6: #124f42;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --viz-a: #c98500;
+    --viz-b: #199e70;
+    --viz-muted: #4b605d;
+    --viz-grid: #233533;
+    --viz-flag: #e66767;
+    --seq-1: #1d3330;
+    --seq-2: #22493f;
+    --seq-3: #2b6556;
+    --seq-4: #3a8a73;
+    --seq-5: #5fb39a;
+    --seq-6: #a5dccb;
+  }
+}
+
+.leaflet-bar a,
+.leaflet-bar a:hover {
+  background: var(--surface);
+  color: var(--ink);
+  border-color: var(--rule);
+}
+.leaflet-control-attribution {
+  background: color-mix(in srgb, var(--surface) 85%, transparent) !important;
+  color: var(--ink-2);
+}
+
+/* Doctor-visit summary prints on plain paper */
+@media print {
+  header.sticky, footer, nav[aria-label="Main"], .print\:hidden { display: none !important; }
+  body, html { background: #fff !important; color: #000; }
+  .mark { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  a { color: inherit; text-decoration: none; }
+}

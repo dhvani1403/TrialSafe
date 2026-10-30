@@ -1,0 +1,55 @@
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: trialmatch
+      POSTGRES_PASSWORD: trialmatch
+      POSTGRES_DB: trialmatch
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U trialmatch"]
+      interval: 5s
+      retries: 20
+
+  api:
+    build: ./backend
+    env_file: ./backend/.env
+    environment:
+      DATABASE_URL: postgresql://trialmatch:trialmatch@db:5432/trialmatch
+      CORS_ORIGINS: '["http://localhost:3000"]'
+    volumes:
+      - artifacts:/app/artifacts
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+
+  # First start: full pipeline (ingest -> parse -> embed -> train -> evaluate), then refresh on a schedule.
+  worker:
+    build: ./backend
+    env_file: ./backend/.env
+    environment:
+      DATABASE_URL: postgresql://trialmatch:trialmatch@db:5432/trialmatch
+    volumes:
+      - artifacts:/app/artifacts
+    command: sh -c "python -m scripts.cli pipeline && python -m app.worker --delay-first"
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  web:
+    build:
+      context: ./frontend
+      args:
+        API_URL: http://api:8000
+    depends_on:
+      - api
+    ports:
+      - "3000:3000"
+
+volumes:
+  pgdata:
+  artifacts:

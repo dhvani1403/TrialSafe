@@ -1,0 +1,34 @@
+# secrets
+.env
+.env.*
+!.env.example
+
+# python
+__pycache__/
+*.pyc
+.venv/
+.venv*/
+.pytest_cache/
+.ruff_cache/
+
+# node
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+next-env.d.ts
+
+# model artifacts are reproducible via `make train`
+backend/artifacts/*.joblib
+backend/artifacts/*.npz
+
+.DS_Store
+
+# browser automation scratch
+.playwright-mcp/
+
+# TREC data is downloaded on demand (make trec)
+backend/data/trec/*.txt
+backend/data/trec/*.xml
+backend/artifacts/bench/
+backend/artifacts/*_pairs.json

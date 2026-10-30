@@ -1,0 +1,61 @@
+{
+  "year": 2021,
+  "topics": 75,
+  "pairs": 35810,
+  "label_distribution": {
+    "1": 6018,
+    "0": 24223,
+    "2": 5569
+  },
+  "topics_without_condition_match": 0,
+  "results": {
+    "Random": {
+      "ndcg@10": 0.2017,
+      "p@10": 0.1453,
+      "mrr": 0.2727
+    },
+    "BM25 (Postgres full-text)": {
+      "ndcg@10": 0.3465,
+      "p@10": 0.268,
+      "mrr": 0.4048
+    },
+    "Semantic (embeddings)": {
+      "ndcg@10": 0.4502,
+      "p@10": 0.3333,
+      "mrr": 0.5262
+    },
+    "Hybrid RRF": {
+      "ndcg@10": 0.453,
+      "p@10": 0.3413,
+      "mrr": 0.5476
+    },
+    "Heuristic (condition \u00d7 eligibility)": {
+      "ndcg@10": 0.4316,
+      "p@10": 0.352,
+      "mrr": 0.5526
+    },
+    "GBDT, synthetic labels only": {
+      "ndcg@10": 0.4155,
+      "p@10": 0.3453,
+      "mrr": 0.5414
+    },
+    "GBDT, trained on TREC (5-fold CV)": {
+      "ndcg@10": 0.535,
+      "p@10": 0.4387,
+      "mrr": 0.6218
+    },
+    "GBDT, synthetic + TREC (production, 5-fold CV)": {
+      "ndcg@10": 0.5292,
+      "p@10": 0.4507,
+      "mrr": 0.5989
+    }
+  },
+  "eligibility": {
+    "pairs": 11587,
+    "auc_eligibility_score": 0.5799,
+    "flag_precision": 0.7155,
+    "flag_recall": 0.4626,
+    "base_rate_excluded": 0.5194
+  },
+  "protocol": "Re-rank each topic's judged pool. Profiles extracted from the notes without an LLM. NDCG@10 uses gains 0/1/2; P@10 and MRR count only 'eligible' (2)."
+}
