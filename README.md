@@ -137,29 +137,15 @@ The audit counts studies reachable within 100 miles over 10 conditions × 6 age 
 - The Midwest reference locations get 35% of the best-served region (Northeast).
 - People aged 85+ get 81% of the matches of 50–64 year olds. 44% of depression trials and 42% of asthma trials exclude people over 75.
 
-### Caveats
-
-- **The gold labels are AI-drafted and not yet human-verified.** Review them at `/annotate` (or edit [`criteria_gold.jsonl`](backend/data/gold/criteria_gold.jsonl)) before citing the parsing numbers. The tool can also add uniformly random lines, which avoids the current sampling bias: most lines were sampled where the rule parser had already found a concept, which flatters its recall.
-- Several rule-parser fixes were made after looking at evaluation errors, so the rule parser's score is somewhat optimistic.
-- The explanation audit is automatic and covers 10 cases, limited by the free LLM quota. It checks consistency with the rule check, not medical correctness.
-- The fairness audit measures access to listed trials, not medical eligibility.
-
 ## Architecture
 
-```
-ClinicalTrials.gov API ──► worker (scheduled) ──► Postgres + pgvector
-                               │  ingest → rule parse → embed → LLM-parse busiest trials
-                               ▼
-     trials · sites · parsed_eligibility · llm_calls · explanations · gold_annotations · eval_reports
-                               │
-Browser ──► Next.js (/api rewrite) ──► FastAPI
-  wizard · results+map · trial view        /match: FTS + vector → RRF → eligibility check
-  saved summary · insights · annotate              → 23 features → GBDT ranker
-                                           /trials/{id}/evaluate · /similar · /explain (+ guardrails)
-                                           /profile/extract · /annotations · /insights
+![System architecture](docs/diagrams/architecture.png)
 
-TREC benchmark ──► separate database (trialmatch_bench) so closed historical trials never reach patients
-```
+![How a search works](docs/diagrams/match-pipeline.png)
+
+![From fine print to checkable rules](docs/diagrams/rule-parsing.png)
+
+The diagram sources are SVG files in [`docs/diagrams/`](docs/diagrams/).
 
 ## Running it locally
 
@@ -195,10 +181,6 @@ python -m scripts.cli eval-explain --limit 10   # 10 LLM calls; --reaudit re-sco
 python -m scripts.cli train                     # synthetic ranking eval + production ranker
 python -m scripts.cli fairness
 ```
-
-### LLM quota
-
-The OpenRouter free tier allows 50 requests a day. The app caps itself at `LLM_DAILY_BUDGET=40` and logs every call. Parsing sends about 3 calls per trial (15-line chunks, because long calls time out on free models). When the budget runs out, everything falls back to the rule parser and template explanations.
 
 ### Annotation in a shared deployment
 

@@ -1,0 +1,137 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="780" viewBox="0 0 1440 780" font-family="'Public Sans', 'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#48605d"/>
+    </marker>
+    <style>
+      .box { fill: #ffffff; stroke: #d3ddda; stroke-width: 1.5; }
+      .core { fill: #ffffff; stroke: #1e5a52; stroke-width: 2; }
+      .h { font-size: 18px; font-weight: 700; fill: #112b2a; }
+      .sub { font-size: 13px; fill: #6f8481; }
+      .t { font-size: 14px; fill: #112b2a; }
+      .t2 { font-size: 13px; fill: #48605d; }
+      .mono { font-family: 'SFMono-Regular', Menlo, Consolas, monospace; font-size: 13px; fill: #112b2a; }
+      .ep { font-family: 'SFMono-Regular', Menlo, Consolas, monospace; font-size: 13.5px; font-weight: 700; fill: #1e5a52; }
+      .lbl { font-size: 12px; fill: #48605d; }
+      .line { stroke: #48605d; stroke-width: 1.6; fill: none; }
+      .num { fill: #1e5a52; }
+      .numt { font-size: 12px; font-weight: 700; fill: #ffffff; }
+    </style>
+  </defs>
+
+  <rect width="1440" height="780" fill="#f4f7f6"/>
+
+  <text x="40" y="52" font-size="26" font-weight="700" fill="#112b2a">TrialMatch · system architecture</text>
+  <text x="40" y="80" font-size="15" fill="#48605d">A scheduled data pipeline, a FastAPI service over Postgres + pgvector, and a Next.js app. The health profile stays in the browser.</text>
+
+  <!-- OpenRouter -->
+  <rect class="box" x="600" y="110" width="230" height="92" rx="12"/>
+  <text class="h" x="622" y="142">OpenRouter LLMs</text>
+  <text class="t2" x="622" y="166">free models · JSON mode</text>
+  <text class="t2" x="622" y="186">rule &amp; template fallbacks</text>
+
+  <!-- ClinicalTrials.gov -->
+  <rect class="box" x="40" y="345" width="190" height="120" rx="12"/>
+  <text class="h" x="60" y="380">ClinicalTrials.gov</text>
+  <text class="t2" x="60" y="406">API v2 · open US trials</text>
+  <text class="t2" x="60" y="428">~2,600 trials</text>
+  <text class="t2" x="60" y="448">~79,000 sites</text>
+
+  <!-- Worker -->
+  <rect class="box" x="290" y="250" width="250" height="310" rx="12"/>
+  <text class="h" x="312" y="284">Worker</text>
+  <text class="sub" x="312" y="304">scheduled · every 24 h</text>
+  <g>
+    <circle class="num" cx="322" cy="341" r="11"/><text class="numt" x="322" y="345.5" text-anchor="middle">1</text>
+    <text class="t" x="342" y="346">Ingest &amp; geocode sites</text>
+    <circle class="num" cx="322" cy="385" r="11"/><text class="numt" x="322" y="389.5" text-anchor="middle">2</text>
+    <text class="t" x="342" y="390">Rule-parse eligibility</text>
+    <circle class="num" cx="322" cy="429" r="11"/><text class="numt" x="322" y="433.5" text-anchor="middle">3</text>
+    <text class="t" x="342" y="434">Embed trials</text>
+    <circle class="num" cx="322" cy="473" r="11"/><text class="numt" x="322" y="477.5" text-anchor="middle">4</text>
+    <text class="t" x="342" y="478">LLM-parse busiest trials</text>
+    <circle class="num" cx="322" cy="517" r="11"/><text class="numt" x="322" y="521.5" text-anchor="middle">5</text>
+    <text class="t" x="342" y="522">Train ranker · run evals</text>
+  </g>
+
+  <!-- Postgres (cylinder) -->
+  <path class="core" d="M600,268 V542 A115,18 0 0 0 830,542 V268"/>
+  <ellipse cx="715" cy="268" rx="115" ry="18" fill="#e8eeec" stroke="#1e5a52" stroke-width="2"/>
+  <text class="h" x="622" y="318">Postgres + pgvector</text>
+  <text class="mono" x="622" y="352">trials · sites</text>
+  <text class="mono" x="622" y="378">parsed_eligibility</text>
+  <text class="mono" x="622" y="404">embeddings (HNSW)</text>
+  <text class="mono" x="622" y="430">explanations</text>
+  <text class="mono" x="622" y="456">llm_calls</text>
+  <text class="mono" x="622" y="482">gold_annotations</text>
+  <text class="mono" x="622" y="508">eval_reports</text>
+
+  <!-- FastAPI -->
+  <rect class="core" x="890" y="250" width="250" height="310" rx="12"/>
+  <text class="h" x="912" y="284">FastAPI</text>
+  <text class="sub" x="912" y="304">Python service</text>
+  <text class="ep" x="912" y="338">/match</text>
+  <text class="t2" x="912" y="357">hybrid search → rules → ranker</text>
+  <text class="ep" x="912" y="388">/trials/{id}</text>
+  <text class="t2" x="912" y="407">evaluate · similar studies</text>
+  <text class="ep" x="912" y="438">/explain</text>
+  <text class="t2" x="912" y="457">LLM summary + guardrails</text>
+  <text class="ep" x="912" y="488">/profile/extract</text>
+  <text class="t2" x="912" y="507">free text → profile</text>
+  <text class="ep" x="912" y="538">/insights · /annotations</text>
+
+  <!-- Next.js -->
+  <rect class="box" x="1200" y="250" width="200" height="310" rx="12"/>
+  <text class="h" x="1222" y="284">Next.js 16</text>
+  <text class="sub" x="1222" y="304">App Router · Tailwind</text>
+  <text class="t" x="1222" y="340">Home</text>
+  <text class="t" x="1222" y="369">Match wizard</text>
+  <text class="t" x="1222" y="398">Results + map</text>
+  <text class="t" x="1222" y="427">Trial detail</text>
+  <text class="t" x="1222" y="456">Saved · print summary</text>
+  <text class="t" x="1222" y="485">Insights dashboard</text>
+  <text class="t" x="1222" y="514">Annotate (gold set)</text>
+
+  <!-- Browser -->
+  <rect class="box" x="1200" y="620" width="200" height="110" rx="12"/>
+  <text class="h" x="1222" y="654">Browser</text>
+  <text class="t2" x="1222" y="680">profile: session storage</text>
+  <text class="t2" x="1222" y="702">saved: local storage</text>
+
+  <!-- TREC + bench DB -->
+  <rect class="box" x="40" y="620" width="190" height="110" rx="12"/>
+  <text class="h" x="60" y="654">TREC 2021</text>
+  <text class="t2" x="60" y="680">75 patient notes</text>
+  <text class="t2" x="60" y="702">35k expert judgements</text>
+
+  <rect class="box" x="290" y="620" width="250" height="110" rx="12"/>
+  <text class="h" x="312" y="654">Benchmark database</text>
+  <text class="t2" x="312" y="680">26k historical trials, kept</text>
+  <text class="t2" x="312" y="702">apart from patient searches</text>
+
+  <!-- connectors -->
+  <line class="line" x1="230" y1="405" x2="288" y2="405" marker-end="url(#arr)"/>
+  <text class="lbl" x="259" y="395" text-anchor="middle">fetch</text>
+
+  <line class="line" x1="540" y1="405" x2="598" y2="405" marker-end="url(#arr)"/>
+  <text class="lbl" x="569" y="395" text-anchor="middle">upsert</text>
+
+  <line class="line" x1="832" y1="405" x2="888" y2="405" marker-start="url(#arr)" marker-end="url(#arr)"/>
+  <text class="lbl" x="860" y="395" text-anchor="middle">SQL</text>
+
+  <line class="line" x1="1142" y1="405" x2="1198" y2="405" marker-start="url(#arr)" marker-end="url(#arr)"/>
+  <text class="lbl" x="1170" y="395" text-anchor="middle">/api</text>
+
+  <line class="line" x1="1300" y1="562" x2="1300" y2="618" marker-start="url(#arr)" marker-end="url(#arr)"/>
+
+  <polyline class="line" points="598,156 415,156 415,248" marker-start="url(#arr)" marker-end="url(#arr)"/>
+  <text class="lbl" x="506" y="146" text-anchor="middle">parse criteria</text>
+
+  <polyline class="line" points="832,156 1015,156 1015,248" marker-start="url(#arr)" marker-end="url(#arr)"/>
+  <text class="lbl" x="924" y="146" text-anchor="middle">write explanations</text>
+
+  <line class="line" x1="230" y1="675" x2="288" y2="675" marker-end="url(#arr)"/>
+
+  <polyline class="line" points="540,675 715,675 715,562" marker-end="url(#arr)"/>
+  <text class="lbl" x="627" y="665" text-anchor="middle">benchmark scores</text>
+</svg>

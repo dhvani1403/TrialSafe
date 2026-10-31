@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="560" viewBox="0 0 1440 560" font-family="'Public Sans', 'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#48605d"/>
+    </marker>
+    <style>
+      .box { fill: #ffffff; stroke: #d3ddda; stroke-width: 1.5; }
+      .end { fill: #1e5a52; }
+      .h { font-size: 18px; font-weight: 700; fill: #112b2a; }
+      .hw { font-size: 18px; font-weight: 700; fill: #ffffff; }
+      .t { font-size: 14px; fill: #112b2a; }
+      .t2 { font-size: 13.5px; fill: #48605d; }
+      .tw { font-size: 14px; fill: #e4ecea; }
+      .stage { font-size: 12px; font-weight: 700; letter-spacing: 0.08em; fill: #6f8481; }
+      .stagew { font-size: 12px; font-weight: 700; letter-spacing: 0.08em; fill: #bfe5c6; }
+      .line { stroke: #48605d; stroke-width: 1.8; fill: none; }
+      .chip { font-size: 13px; fill: #112b2a; }
+      .brk { stroke: #9fb1ae; stroke-width: 1.5; fill: none; }
+      .brkt { font-size: 13px; fill: #48605d; }
+    </style>
+  </defs>
+
+  <rect width="1440" height="560" fill="#f4f7f6"/>
+
+  <text x="40" y="52" font-size="26" font-weight="700" fill="#112b2a">How a search works</text>
+  <text x="40" y="80" font-size="15" fill="#48605d">One request to /match, from a short health profile to ranked, explained matches.</text>
+
+  <!-- 0: profile -->
+  <rect class="end" x="40" y="120" width="190" height="300" rx="12"/>
+  <text class="stagew" x="60" y="150">INPUT</text>
+  <text class="hw" x="60" y="176">Your profile</text>
+  <text class="tw" x="60" y="212">condition</text>
+  <text class="tw" x="60" y="236">age · sex</text>
+  <text class="tw" x="60" y="260">location + radius</text>
+  <text class="tw" x="60" y="284">optional health</text>
+  <text class="tw" x="60" y="304">details</text>
+  <text class="tw" x="60" y="344">or describe it in</text>
+  <text class="tw" x="60" y="364">your own words</text>
+
+  <!-- 1: retrieve -->
+  <rect class="box" x="274" y="120" width="190" height="300" rx="12"/>
+  <text class="stage" x="294" y="150">STEP 1</text>
+  <text class="h" x="294" y="176">Retrieve</text>
+  <text class="t" x="294" y="212">Full-text search</text>
+  <text class="t" x="294" y="236">+ embedding search</text>
+  <text class="t" x="294" y="260">(pgvector)</text>
+  <text class="t2" x="294" y="300">merged with</text>
+  <text class="t2" x="294" y="320">reciprocal rank fusion</text>
+  <text class="t2" x="294" y="360">“heart attack” also finds</text>
+  <text class="t2" x="294" y="380">“myocardial infarction”</text>
+
+  <!-- 2: eligibility -->
+  <rect class="box" x="508" y="120" width="190" height="300" rx="12"/>
+  <text class="stage" x="528" y="150">STEP 2</text>
+  <text class="h" x="528" y="176">Check eligibility</text>
+  <text class="t" x="528" y="212">Every parsed rule</text>
+  <text class="t" x="528" y="236">vs. your answers</text>
+  <rect x="528" y="262" width="150" height="26" rx="4" fill="#bfe5c6"/>
+  <text class="chip" x="538" y="280">Meets</text>
+  <rect x="528" y="296" width="150" height="26" rx="4" fill="#f5bdb4"/>
+  <text class="chip" x="538" y="314">Conflicts</text>
+  <rect x="528" y="330" width="150" height="26" rx="4" fill="#f5e07a"/>
+  <text class="chip" x="538" y="348">Check</text>
+  <rect x="528" y="364" width="150" height="26" rx="4" fill="#d5e3f2"/>
+  <text class="chip" x="538" y="382">Study team checks</text>
+
+  <!-- 3: rank -->
+  <rect class="box" x="742" y="120" width="190" height="300" rx="12"/>
+  <text class="stage" x="762" y="150">STEP 3</text>
+  <text class="h" x="762" y="176">Rank</text>
+  <text class="t" x="762" y="212">23 features</text>
+  <text class="t2" x="762" y="240">condition match</text>
+  <text class="t2" x="762" y="262">rules met / conflicts</text>
+  <text class="t2" x="762" y="284">distance to sites</text>
+  <text class="t2" x="762" y="306">phase · recruiting</text>
+  <text class="t2" x="762" y="328">search scores</text>
+  <text class="t" x="762" y="366">gradient-boosted</text>
+  <text class="t" x="762" y="388">ranking model</text>
+
+  <!-- 4: explain -->
+  <rect class="box" x="976" y="120" width="190" height="300" rx="12"/>
+  <text class="stage" x="996" y="150">STEP 4</text>
+  <text class="h" x="996" y="176">Explain</text>
+  <text class="t" x="996" y="212">LLM writes a plain-</text>
+  <text class="t" x="996" y="236">language summary</text>
+  <text class="t2" x="996" y="276">Guardrail checks it</text>
+  <text class="t2" x="996" y="296">against step 2:</text>
+  <text class="t2" x="996" y="320">· no eligibility claims</text>
+  <text class="t2" x="996" y="342">· no contradictions</text>
+  <text class="t2" x="996" y="364">· conflicts added back</text>
+  <text class="t2" x="996" y="386">· template fallback</text>
+
+  <!-- 5: results -->
+  <rect class="end" x="1210" y="120" width="190" height="300" rx="12"/>
+  <text class="stagew" x="1230" y="150">OUTPUT</text>
+  <text class="hw" x="1230" y="176">Your matches</text>
+  <text class="tw" x="1230" y="212">ranked list with</text>
+  <text class="tw" x="1230" y="236">a verdict per study</text>
+  <text class="tw" x="1230" y="272">map of nearest sites</text>
+  <text class="tw" x="1230" y="308">reasons for and</text>
+  <text class="tw" x="1230" y="332">against</text>
+  <text class="tw" x="1230" y="368">save · print for</text>
+  <text class="tw" x="1230" y="392">your doctor</text>
+
+  <!-- arrows -->
+  <line class="line" x1="232" y1="270" x2="272" y2="270" marker-end="url(#arr)"/>
+  <line class="line" x1="466" y1="270" x2="506" y2="270" marker-end="url(#arr)"/>
+  <line class="line" x1="700" y1="270" x2="740" y2="270" marker-end="url(#arr)"/>
+  <line class="line" x1="934" y1="270" x2="974" y2="270" marker-end="url(#arr)"/>
+  <line class="line" x1="1168" y1="270" x2="1208" y2="270" marker-end="url(#arr)"/>
+
+  <!-- where each step runs -->
+  <path class="brk" d="M274,446 v10 H698 v-10"/>
+  <text class="brkt" x="486" y="480" text-anchor="middle">Postgres + pgvector · rule matcher</text>
+  <path class="brk" d="M742,446 v10 H932 v-10"/>
+  <text class="brkt" x="837" y="480" text-anchor="middle">scikit-learn model</text>
+  <path class="brk" d="M976,446 v10 H1166 v-10"/>
+  <text class="brkt" x="1071" y="480" text-anchor="middle">OpenRouter LLM</text>
+  <text font-size="13" fill="#6f8481" x="40" y="526">The profile is sent only to run the search; it is never stored on the server.</text>
+</svg>

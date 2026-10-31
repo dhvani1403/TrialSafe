@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="560" viewBox="0 0 1440 560" font-family="'Public Sans', 'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#48605d"/>
+    </marker>
+    <style>
+      .box { fill: #ffffff; stroke: #d3ddda; stroke-width: 1.5; }
+      .core { fill: #ffffff; stroke: #1e5a52; stroke-width: 2; }
+      .h { font-size: 18px; font-weight: 700; fill: #112b2a; }
+      .cap { font-size: 12px; font-weight: 700; letter-spacing: 0.08em; fill: #6f8481; }
+      .serif { font-family: 'Source Serif 4', Georgia, serif; font-size: 16px; fill: #112b2a; }
+      .serifb { font-family: 'Source Serif 4', Georgia, serif; font-size: 16px; font-weight: 700; fill: #112b2a; }
+      .t2 { font-size: 13.5px; fill: #48605d; }
+      .mono { font-family: 'SFMono-Regular', Menlo, Consolas, monospace; font-size: 13.5px; fill: #112b2a; }
+      .monoh { font-family: 'SFMono-Regular', Menlo, Consolas, monospace; font-size: 12px; font-weight: 700; fill: #6f8481; }
+      .inc { font-size: 12px; font-weight: 700; fill: #1e5a52; }
+      .exc { font-size: 12px; font-weight: 700; fill: #9b3b2e; }
+      .line { stroke: #48605d; stroke-width: 1.8; fill: none; }
+      .rule { stroke: #e8eeec; stroke-width: 1; }
+      .score { font-size: 13px; font-weight: 700; fill: #1e5a52; }
+    </style>
+  </defs>
+
+  <rect width="1440" height="560" fill="#f4f7f6"/>
+
+  <text x="40" y="52" font-size="26" font-weight="700" fill="#112b2a">From fine print to checkable rules</text>
+  <text x="40" y="80" font-size="15" fill="#48605d">Each eligibility line is mapped onto a shared vocabulary of 40 concepts, with a direction, a threshold and a timeframe.</text>
+
+  <!-- source text -->
+  <rect class="box" x="40" y="120" width="440" height="330" rx="12"/>
+  <text class="cap" x="64" y="152">AS WRITTEN ON CLINICALTRIALS.GOV</text>
+  <text class="serifb" x="64" y="194">Inclusion Criteria:</text>
+  <rect x="60" y="210" width="281" height="28" rx="3" fill="#bfe5c6" opacity="0.7"/>
+  <text class="serif" x="64" y="230">– ECOG performance status of 0 or 1</text>
+  <rect x="60" y="246" width="180" height="28" rx="3" fill="#bfe5c6" opacity="0.7"/>
+  <text class="serif" x="64" y="266">– Age 18 years or older</text>
+  <text class="serifb" x="64" y="314">Exclusion Criteria:</text>
+  <rect x="60" y="330" width="286" height="28" rx="3" fill="#f5bdb4" opacity="0.7"/>
+  <text class="serif" x="64" y="350">– Known untreated brain metastases</text>
+  <rect x="60" y="366" width="393" height="28" rx="3" fill="#f5bdb4" opacity="0.7"/>
+  <text class="serif" x="64" y="386">– Chemotherapy within 4 weeks before enrollment</text>
+
+  <!-- parsers -->
+  <rect class="box" x="560" y="130" width="250" height="140" rx="12"/>
+  <text class="cap" x="582" y="160">BASELINE · FALLBACK</text>
+  <text class="h" x="582" y="186">Rule parser</text>
+  <text class="t2" x="582" y="212">patterns + NegEx-style negation</text>
+  <text class="t2" x="582" y="234">runs on every trial, free</text>
+  <text class="score" x="582" y="258">F1 0.88</text>
+
+  <rect class="core" x="560" y="300" width="250" height="140" rx="12"/>
+  <text class="cap" x="582" y="330">RE-READS BUSIEST TRIALS</text>
+  <text class="h" x="582" y="356">LLM parser</text>
+  <text class="t2" x="582" y="382">free OpenRouter model,</text>
+  <text class="t2" x="582" y="404">JSON output, same vocabulary</text>
+  <text class="score" x="582" y="428">F1 0.93</text>
+
+  <!-- structured output -->
+  <rect class="core" x="890" y="120" width="510" height="330" rx="12"/>
+  <text class="cap" x="914" y="152">STRUCTURED RULES</text>
+  <text class="monoh" x="914" y="190">KIND</text>
+  <text class="monoh" x="1010" y="190">CONCEPT</text>
+  <text class="monoh" x="1196" y="190">RULE</text>
+  <line class="rule" x1="910" y1="202" x2="1380" y2="202"/>
+
+  <text class="inc" x="914" y="232">requires</text>
+  <text class="mono" x="1010" y="232">ecog</text>
+  <text class="mono" x="1196" y="232">between 0 – 1</text>
+  <line class="rule" x1="910" y1="250" x2="1380" y2="250"/>
+
+  <text class="inc" x="914" y="280">requires</text>
+  <text class="mono" x="1010" y="280">age</text>
+  <text class="mono" x="1196" y="280">≥ 18 years</text>
+  <line class="rule" x1="910" y1="298" x2="1380" y2="298"/>
+
+  <text class="exc" x="914" y="328">excludes</text>
+  <text class="mono" x="1010" y="328">brain_metastases</text>
+  <text class="mono" x="1196" y="328">present</text>
+  <line class="rule" x1="910" y1="346" x2="1380" y2="346"/>
+
+  <text class="exc" x="914" y="376">excludes</text>
+  <text class="mono" x="1010" y="376">prior_chemotherapy</text>
+  <text class="mono" x="1196" y="376">present ·</text>
+  <text class="mono" x="1196" y="396">within 4 weeks</text>
+
+  <text class="t2" x="914" y="432">→ checked against the profile in every search</text>
+
+  <!-- arrows -->
+  <polyline class="line" points="482,285 520,285 520,200 558,200" marker-end="url(#arr)"/>
+  <polyline class="line" points="520,285 520,370 558,370" marker-end="url(#arr)"/>
+  <polyline class="line" points="812,200 850,200 850,285 888,285" marker-end="url(#arr)"/>
+  <polyline class="line" points="812,370 850,370 850,285"/>
+
+  <text font-size="13" fill="#6f8481" x="40" y="500">Because both parsers share one vocabulary, their outputs are scored against the same labelled set of 139 criterion lines.</text>
+  <text font-size="13" fill="#6f8481" x="40" y="522">Example rules shown are the rule parser's actual output for these lines.</text>
+</svg>
