@@ -2,6 +2,12 @@
 
 **Find clinical trials you might qualify for, with every eligibility rule read and explained.**
 
+[![CI](https://github.com/dhvani1403/TrialSafe/actions/workflows/ci.yml/badge.svg)](https://github.com/dhvani1403/TrialSafe/actions/workflows/ci.yml)
+![Python](https://img.shields.io/badge/Python-FastAPI-3776AB?logo=python&logoColor=white)
+![Next.js](https://img.shields.io/badge/Next.js-16-000000?logo=nextdotjs&logoColor=white)
+![Postgres](https://img.shields.io/badge/Postgres-pgvector-4169E1?logo=postgresql&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)
+
 Patients struggle to find trials because eligibility criteria are long, technical free text. TrialMatch takes a short health profile (or a description in your own words), finds open US studies, checks each study's eligibility rules against the profile, ranks the studies, and explains every match: what you meet, what conflicts, and what to ask your doctor.
 
 > ⚠️ **Not medical advice.** TrialMatch is a research prototype built on public ClinicalTrials.gov listings. It can be wrong. Only a study team can confirm eligibility.
@@ -11,6 +17,23 @@ Patients struggle to find trials because eligibility criteria are long, technica
 | | |
 |---|---|
 | ![Annotated eligibility criteria](docs/screenshots/trial.png) | ![Accuracy and fairness dashboard](docs/screenshots/insights.png) |
+
+### At a glance
+
+- **About 2,600 open US trials and 79,000 sites**, ingested from ClinicalTrials.gov on a schedule.
+- **LLM rule reading.** An LLM turns eligibility text into checkable rules: F1 0.93, against 0.88 for a rule-based parser, on a preliminary set of 139 lines.
+- **Learning-to-rank tested on real patients.** On the TREC 2021 Clinical Trials benchmark (75 expert-judged patients), NDCG@10 rose from 0.42 to 0.53 once the ranker was also trained on real labels.
+- **Guarded AI explanations.** Each AI explanation is checked against the rule results: no eligibility claims, no contradictions, and no missing conflicts.
+- **Fairness audit.** Rural towns can reach about 6% as many trials as large cities.
+
+### Tech stack
+
+| Layer | Tools |
+|---|---|
+| Backend | Python, FastAPI, PostgreSQL + pgvector, scikit-learn (gradient-boosted ranker, LSA embeddings) |
+| AI | Free OpenRouter LLMs for parsing criteria and writing explanations, with a daily quota guard and rule-based fallbacks |
+| Frontend | Next.js 16 (App Router), React, TypeScript, Tailwind CSS 4, Leaflet, Recharts |
+| Ops & tests | Docker Compose, GitHub Actions, pytest, Playwright (desktop + mobile) |
 
 ---
 
@@ -143,6 +166,7 @@ TREC benchmark ──► separate database (trialmatch_bench) so closed historic
 Requirements: Python 3.9+, Node 22+, and Postgres 15+ with the `vector` extension.
 
 ```bash
+git clone https://github.com/dhvani1403/TrialSafe.git && cd TrialSafe
 cp backend/.env.example backend/.env       # add OPENROUTER_API_KEY
 make db
 make pipeline          # ingest → parse → embed → train → parsing eval → fairness  (about 5 min)
